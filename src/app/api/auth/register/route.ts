@@ -5,7 +5,7 @@ import { RowDataPacket } from 'mysql2';
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password, referralCode } = await req.json();
+    const { name, email, phone, password, referralCode } = await req.json();
 
     if (!name || !email || !password) {
       return NextResponse.json({ error: 'Alle Felder sind erforderlich' }, { status: 400 });
@@ -36,9 +36,9 @@ export async function POST(req: NextRequest) {
     const myReferralCode = `EP-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
     const [result] = await pool.query(
-      `INSERT INTO users (name, email, password, sponsor_id, referral_code, approved, role, package_type, points)
-       VALUES (?, ?, ?, ?, ?, 0, 'user', 'starter', 0)`,
-      [name, email, hashedPassword, sponsorId, myReferralCode]
+      `INSERT INTO users (name, email, phone, password, sponsor_id, referral_code, approved, role, package_type, points)
+       VALUES (?, ?, ?, ?, ?, ?, 0, 'user', 'starter', 0)`,
+      [name, email, phone || null, hashedPassword, sponsorId, myReferralCode]
     );
 
     return NextResponse.json({ message: 'Registrierung erfolgreich. Warten Sie auf die Genehmigung.' });

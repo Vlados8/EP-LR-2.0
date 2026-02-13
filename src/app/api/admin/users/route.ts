@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     const status = req.nextUrl.searchParams.get('status'); // approved / pending
     const search = req.nextUrl.searchParams.get('search');
 
-    let query = 'SELECT id, name, email, role, approved, active, package_type, points, referral_code, sponsor_id, created_at FROM users WHERE 1=1';
+    let query = 'SELECT id, name, email, phone, role, approved, active, package_type, points, referral_code, sponsor_id, created_at FROM users WHERE 1=1';
     const params: any[] = [];
 
     if (status === 'pending') {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Users, Search, CheckCircle, Clock, ChevronDown, X, Mail, Award, Calendar, Hash, Package, Star, Eye, ShieldOff, ShieldCheck, Power, Banknote, FolderOpen, Loader2 } from 'lucide-react';
+import { Users, Search, CheckCircle, Clock, ChevronDown, X, Mail, Award, Calendar, Hash, Package, Star, Eye, ShieldOff, ShieldCheck, Power, Banknote, FolderOpen, Loader2, Phone, Shield } from 'lucide-react';
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<any[]>([]);
@@ -100,6 +100,20 @@ export default function AdminUsersPage() {
     }
   };
 
+  const changeRole = async (id: number, role: string) => {
+    const res = await fetch(`/api/admin/users/${id}/role`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role }),
+    });
+    if (res.ok) {
+      if (selectedUser?.id === id) {
+        setSelectedUser({ ...selectedUser, role });
+      }
+      fetchUsers();
+    }
+  };
+
   return (
     <div>
       <div className="mb-8">
@@ -163,7 +177,9 @@ export default function AdminUsersPage() {
                 <thead className="bg-gray-50 border-b border-gray-100">
                   <tr>
                     <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Benutzer</th>
+                    <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Telefon</th>
                     <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Status</th>
+                    <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Rolle</th>
                     <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Paket</th>
                     <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Punkte</th>
                     <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Datum</th>
@@ -184,6 +200,9 @@ export default function AdminUsersPage() {
                           </div>
                         </div>
                       </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {u.phone || '—'}
+                      </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-col gap-1">
                           {u.approved ? (
@@ -200,6 +219,21 @@ export default function AdminUsersPage() {
                               <ShieldOff className="w-3 h-3" /> Deaktiviert
                             </span>
                           )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
+                        <div className="relative">
+                          <select
+                            value={u.role || 'user'}
+                            onChange={(e) => changeRole(u.id, e.target.value)}
+                            className={`appearance-none border rounded-lg px-3 py-1.5 pr-8 text-sm cursor-pointer hover:bg-gray-100 ${
+                              u.role === 'admin' ? 'bg-red-50 border-red-200 text-red-700 font-medium' : 'bg-gray-50 border-gray-200 text-gray-700'
+                            }`}
+                          >
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                          </select>
+                          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                         </div>
                       </td>
                       <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
@@ -403,6 +437,16 @@ export default function AdminUsersPage() {
                   </div>
 
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                    <div className="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center">
+                      <Phone className="w-4 h-4 text-green-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-gray-400">Telefon</p>
+                      <p className="text-sm font-medium">{selectedUser.phone || 'Nicht angegeben'}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
                     <div className="w-9 h-9 bg-purple-100 rounded-lg flex items-center justify-center">
                       <Hash className="w-4 h-4 text-purple-600" />
                     </div>
@@ -430,6 +474,29 @@ export default function AdminUsersPage() {
                       <p className="text-xs text-gray-400">Rolle</p>
                       <p className="text-sm font-medium capitalize">{selectedUser.role}</p>
                     </div>
+                  </div>
+                </div>
+
+                {/* Role Selector */}
+                <div className="border border-gray-200 rounded-xl p-4">
+                  <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">Rolle ändern</p>
+                  <div className="relative">
+                    <select
+                      value={selectedUser.role || 'user'}
+                      onChange={(e) => {
+                        changeRole(selectedUser.id, e.target.value);
+                        setSelectedUser({ ...selectedUser, role: e.target.value });
+                      }}
+                      className={`w-full appearance-none border rounded-lg px-4 py-2.5 pr-10 text-sm cursor-pointer font-medium ${
+                        selectedUser.role === 'admin'
+                          ? 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100'
+                          : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                      }`}
+                    >
+                      <option value="user">User (Benutzer)</option>
+                      <option value="admin">Admin (Administrator)</option>
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                   </div>
                 </div>
 

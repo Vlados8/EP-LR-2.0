@@ -34,6 +34,7 @@ async function initDatabase() {
       id INT AUTO_INCREMENT PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       email VARCHAR(255) NOT NULL UNIQUE,
+      phone VARCHAR(50) DEFAULT NULL,
       password VARCHAR(255) NOT NULL,
       sponsor_id INT DEFAULT NULL,
       referral_code VARCHAR(50) UNIQUE,
@@ -50,6 +51,14 @@ async function initDatabase() {
       INDEX idx_sponsor_id (sponsor_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
+
+  // Add phone column if it doesn't exist (for existing databases)
+  try {
+    await connection.query(`ALTER TABLE users ADD COLUMN phone VARCHAR(50) DEFAULT NULL AFTER email`);
+    console.log('Added phone column to users table');
+  } catch (err) {
+    if (err.code !== 'ER_DUP_FIELDNAME') throw err;
+  }
 
   // Projects table
   await connection.query(`
@@ -184,8 +193,8 @@ async function initDatabase() {
 
   try {
     await connection.query(`
-      INSERT INTO users (name, email, password, approved, role, package_type, referral_code, points)
-      VALUES ('Administrator', 'admin@ep.de', ?, 1, 'admin', 'premium', 'EP-ADMIN', 0)
+      INSERT INTO users (name, email, phone, password, approved, role, package_type, referral_code, points)
+      VALUES ('Administrator', 'admin@ep.de', '', ?, 1, 'admin', 'premium', 'EP-ADMIN', 0)
     `, [adminPassword]);
     console.log('Admin account created: admin@ep.de / admin123');
   } catch (err) {

@@ -13,6 +13,7 @@ import {
   Zap,
   ChevronRight,
   X,
+  UserCog,
 } from 'lucide-react';
 
 const links = [
@@ -22,6 +23,7 @@ const links = [
   { href: '/dashboard/points', label: 'Punkte', icon: Coins },
   { href: '/dashboard/referral', label: 'Empfehlung', icon: LinkIcon },
   { href: '/dashboard/shop', label: 'Shop', icon: ShoppingBag },
+  { href: '/dashboard/profile', label: 'Profil', icon: UserCog },
 ];
 
 interface SidebarProps {

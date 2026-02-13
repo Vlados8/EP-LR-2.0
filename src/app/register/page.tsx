@@ -15,6 +15,7 @@ function RegisterForm() {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [referralCode, setReferralCode] = useState(refCode);
   const [showPassword, setShowPassword] = useState(false);
@@ -28,7 +29,7 @@ function RegisterForm() {
     setSuccess('');
     setLoading(true);
 
-    const result = await register(name, email, password, referralCode);
+    const result = await register(name, email, password, referralCode, phone);
     setLoading(false);
 
     if (result.success) {
@@ -93,6 +94,16 @@ function RegisterForm() {
                   required
                   className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none bg-gray-50/50 transition-all hover:border-gray-300"
                   placeholder="name@email.de"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Telefon</label>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none bg-gray-50/50 transition-all hover:border-gray-300"
+                  placeholder="+49 123 456 789"
                 />
               </div>
               <div>

@@ -7,6 +7,7 @@ interface User {
   id: number;
   name: string;
   email: string;
+  phone: string | null;
   role: string;
   approved: number;
   active: number;
@@ -21,7 +22,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  register: (name: string, email: string, password: string, referralCode?: string) => Promise<{ success: boolean; error?: string }>;
+  register: (name: string, email: string, password: string, referralCode?: string, phone?: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -75,12 +76,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const register = async (name: string, email: string, password: string, referralCode?: string) => {
+  const register = async (name: string, email: string, password: string, referralCode?: string, phone?: string) => {
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, referralCode }),
+        body: JSON.stringify({ name, email, phone, password, referralCode }),
       });
       const data = await res.json();
       if (res.ok) {

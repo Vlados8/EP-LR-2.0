@@ -7,7 +7,7 @@ import { RowDataPacket } from 'mysql2';
 // PUT — update order status (admin only)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getSessionUser();
@@ -15,7 +15,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Zugriff verweigert' }, { status: 403 });
     }
 
-    const orderId = params.id;
+    const { id: orderId } = await params;
     const { status } = await request.json();
 
     if (!['pending', 'paid', 'cancelled'].includes(status)) {

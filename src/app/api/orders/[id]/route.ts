@@ -5,10 +5,10 @@ import { RowDataPacket } from 'mysql2';
 // GET — get order by orderId (public, no auth required so user can view payment page)
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const orderId = params.id;
+    const { id: orderId } = await params;
 
     const [rows] = await pool.query<RowDataPacket[]>(
       `SELECT po.*, u.name as user_name, u.email as user_email

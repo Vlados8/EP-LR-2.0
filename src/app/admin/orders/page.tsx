@@ -320,6 +320,28 @@ export default function AdminOrdersPage() {
                                 </button>
                               </>
                             )}
+                            {order.status === 'cancelled' && (
+                              <button
+                                onClick={() =>
+                                  updateOrderStatus(order.order_id, 'paid')
+                                }
+                                disabled={updating === order.order_id}
+                                className="px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+                              >
+                                {updating === order.order_id ? '...' : 'Als bezahlt'}
+                              </button>
+                            )}
+                            {order.status === 'paid' && (
+                              <button
+                                onClick={() =>
+                                  updateOrderStatus(order.order_id, 'cancelled')
+                                }
+                                disabled={updating === order.order_id}
+                                className="px-3 py-1.5 bg-red-50 text-red-600 text-xs font-medium rounded-lg hover:bg-red-100 transition disabled:opacity-50"
+                              >
+                                Stornieren
+                              </button>
+                            )}
                             <button
                               onClick={() => setSelectedOrder(order)}
                               className="p-1.5 rounded-lg hover:bg-gray-100 transition text-gray-400 hover:text-gray-600"
@@ -406,6 +428,24 @@ export default function AdminOrdersPage() {
                             Stornieren
                           </button>
                         </>
+                      )}
+                      {order.status === 'cancelled' && (
+                        <button
+                          onClick={() => updateOrderStatus(order.order_id, 'paid')}
+                          disabled={updating === order.order_id}
+                          className="px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+                        >
+                          {updating === order.order_id ? '...' : 'Als bezahlt'}
+                        </button>
+                      )}
+                      {order.status === 'paid' && (
+                        <button
+                          onClick={() => updateOrderStatus(order.order_id, 'cancelled')}
+                          disabled={updating === order.order_id}
+                          className="px-3 py-1.5 bg-red-50 text-red-600 text-xs font-medium rounded-lg hover:bg-red-100 transition disabled:opacity-50"
+                        >
+                          Stornieren
+                        </button>
                       )}
                       <button
                         onClick={() => setSelectedOrder(order)}
@@ -577,6 +617,30 @@ export default function AdminOrdersPage() {
                       Stornieren
                     </button>
                   </div>
+                )}
+                {selectedOrder.status === 'cancelled' && (
+                  <button
+                    onClick={() => {
+                      updateOrderStatus(selectedOrder.order_id, 'paid');
+                      setSelectedOrder(null);
+                    }}
+                    className="w-full py-3 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition text-sm flex items-center justify-center gap-2"
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                    Als bezahlt markieren
+                  </button>
+                )}
+                {selectedOrder.status === 'paid' && (
+                  <button
+                    onClick={() => {
+                      updateOrderStatus(selectedOrder.order_id, 'cancelled');
+                      setSelectedOrder(null);
+                    }}
+                    className="w-full py-3 bg-red-50 text-red-600 font-medium rounded-xl hover:bg-red-100 transition text-sm flex items-center justify-center gap-2"
+                  >
+                    <XCircle className="w-4 h-4" />
+                    Stornieren
+                  </button>
                 )}
               </div>
             </div>

@@ -11,7 +11,7 @@ export async function GET() {
     }
 
     const [users] = await pool.query<RowDataPacket[]>(
-      'SELECT id, name, email, role, approved, active, package_type, points, referral_code, sponsor_id, created_at FROM users WHERE id = ?',
+      'SELECT id, name, email, phone, role, approved, active, package_type, points, referral_code, sponsor_id, created_at FROM users WHERE id = ?',
       [session.userId]
     );
 
