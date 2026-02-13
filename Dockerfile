@@ -36,8 +36,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Copy DB init script
+# Copy DB init script + all node_modules (for mysql2, dotenv, bcryptjs)
 COPY --from=builder /app/scripts ./scripts
+COPY --from=deps /app/node_modules ./node_modules
 
 USER nextjs
 
@@ -47,5 +48,5 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 # Auto-initialize database tables on startup, then start the app
-CMD ["sh", "-c", "node scripts/init-db.js && node server.js"]
-
+# Use || true so app still starts even if DB init fails (DB might not be ready yet)
+CMD ["sh", "-c", "node scripts/init-db.js; node server.js"]
