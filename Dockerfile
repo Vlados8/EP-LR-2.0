@@ -46,4 +46,6 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+# Auto-initialize database tables on startup, then start the app
+CMD ["sh", "-c", "node scripts/init-db.js && node server.js"]
+
